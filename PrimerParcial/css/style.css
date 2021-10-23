@@ -1,0 +1,138 @@
+*{
+    box-sizing: border-box;
+}
+
+body, html {
+    width: 100%;
+    height: 100%;
+    min-height: 100vh;
+  }
+
+#formulario{
+    visibility: hidden;
+    position: absolute;
+    margin-left: 30%;
+    margin-top: 10%;
+    flex-direction:column;
+    background-color: rgba(244, 236, 236, 0.973);
+    padding: 10px;
+    width: 400px;
+    
+}
+
+#listado{
+    width: 100%;
+}
+
+tr{
+    width: 1300px;
+    display: flex;
+    justify-content:space-between;
+    border:1px grey solid;
+
+}
+
+
+#cabecera{
+    background-color: rgb(72, 156, 145);
+    color: white;
+    font-size: 14px;
+    height: 24px;
+}
+
+#container{
+    width:100%;
+    height:100vh;
+    display:flex;
+}
+
+
+#btnCerrar{
+    width: 30px;
+    height: 30px;
+    background-color: rgb(228, 72, 72);
+
+}
+
+#btnModificar{
+    width: 200px;
+    height: 50px;
+    color: honeydew;
+    font-size: 14px;
+    margin-top: 10px;
+    background-color: rgb(120, 182, 120);
+}
+
+.inputs{
+    width: 96%;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+#idSpinner {
+    
+    position: absolute;
+    top: 30%;
+    left: 45%;
+    z-index: 100000;
+    visibility: hidden;
+    width: 100px;
+    height: 100px;
+    margin: 100px auto;
+    background-color: #333;
+  
+    border-radius: 100%;  
+    -webkit-animation: sk-scaleout 1.0s infinite ease-in-out;
+    animation: sk-scaleout 1.0s infinite ease-in-out;
+  }
+  
+  @-webkit-keyframes sk-scaleout {
+    0% { -webkit-transform: scale(0) }
+    100% {
+      -webkit-transform: scale(1.0);
+      opacity: 0;
+    }
+  }
+  
+  @keyframes sk-scaleout {
+    0% { 
+      -webkit-transform: scale(0);
+      transform: scale(0);
+    } 100% {
+      -webkit-transform: scale(1.0);
+      transform: scale(1.0);
+      opacity: 0;
+    }
+  }
+/*
+.content{
+    width:100%;
+    height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    background:#fff;
+  }
+  
+  .spinner{
+    position: absolute; 
+    visibility: visible;
+    width:100%;
+    height:100%;
+    border-radius:50%;
+    border:5px solid black;
+    background:transparent;
+    border-top-color:#efef;
+    border-bottom-color: #efef;
+    border-left-color: black;
+   animation:spin 1.5s linear infinite;
+    position:relative;
+  }
+  
+  @keyframes spin{
+    0%{
+      background:transparent;
+      transform: rotate(720deg); 
+    }
+  
+  }*/

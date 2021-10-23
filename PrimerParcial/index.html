@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/style.css">
+    <title>Document</title>
+</head>
+
+<body>
+
+    <div id="container">
+        <div id="listado">
+            <h3>Lista de personas</h3>
+            <table id="tabla">
+                <tr id=cabecera>
+                    <th>Nombre</th>
+                    <th>Apellido</th>
+                    <th>Localidad</th>
+                    <th>Sexo</th>
+                </tr>
+            </table>
+        </div>
+
+        <div >
+            <div id="idSpinner"></div>
+        </div>
+
+
+
+        <div id="formulario">
+            <button id="btnCerrar">x</button>
+            <br/>
+            <br/>
+            <label for="">Nombre:</label>
+            <input class="inputs" type="text" id="txtNombre" />
+            <label for="">Apellido:</label>
+            <input class="inputs" type="text" id="txtApellido" />
+            <br/>
+            <label for="">Localidad:</label>
+            <br/>
+            <select name="localidad" id="localidad">
+                <option value="" disabled selected>Localidad...</option>
+                  <option value="Barracas">Barracas</option>
+                  <option value="Avellaneda">Avellaneda</option>
+                  <option value="Quilmes">Quilmes</option>
+                  <option value="Lanus">Lanus</option>
+                  <option value="Otras">Otras..</option>
+              </select>
+            <br/>
+            <label for="">Sexo:</label>
+            <br/>
+            <input type="radio" name="doc" id="sexMasc" value="Male" /> <label for="">Masculino</label>
+            <input type="radio" name="doc" id="sexFem" value="Female" /> <label for="">Femenino</label>
+            <br/>
+            <button id="btnModificar">Modificar</button>
+        </div>
+    </div>
+
+    <script src="js/main.js" defer></script>
+</body>
+
+</html>
