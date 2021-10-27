@@ -27,14 +27,16 @@ body, html {
 tr{
     width: 1300px;
     display: flex;
-    justify-content:space-between;
-    border:1px grey solid;
+    justify-content:space-around;
 
 }
 
+.filaGrey{
+  background-color: rgb(232, 225, 225);
+}
 
 #cabecera{
-    background-color: rgb(72, 156, 145);
+    background-color: rgb(71, 196, 179);
     color: white;
     font-size: 14px;
     height: 24px;
@@ -60,7 +62,7 @@ tr{
     color: honeydew;
     font-size: 14px;
     margin-top: 10px;
-    background-color: rgb(120, 182, 120);
+    background-color: rgba(49, 173, 97, 0.863);
 }
 
 .inputs{
@@ -104,35 +106,3 @@ tr{
       opacity: 0;
     }
   }
-/*
-.content{
-    width:100%;
-    height:100vh;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    background:#fff;
-  }
-  
-  .spinner{
-    position: absolute; 
-    visibility: visible;
-    width:100%;
-    height:100%;
-    border-radius:50%;
-    border:5px solid black;
-    background:transparent;
-    border-top-color:#efef;
-    border-bottom-color: #efef;
-    border-left-color: black;
-   animation:spin 1.5s linear infinite;
-    position:relative;
-  }
-  
-  @keyframes spin{
-    0%{
-      background:transparent;
-      transform: rotate(720deg); 
-    }
-  
-  }*/
