@@ -3,212 +3,335 @@ function $(valorId) {
 }
 
 //Variables
-let localidades;
+let materias;
 let fila;
 
-function construirTabla(persona) {
+
+function construirTabla(materia) {
 
     let tabla = $("tabla");
 
     let fila = document.createElement("tr");
-    fila.setAttribute("id", "persona" + persona.id);
-    if (persona.id % 2 == 0) {
-        fila.setAttribute("class", "filaGrey");
-    }
+    fila.setAttribute("id", materia.id);
+    fila.setAttribute("class", "filaStyle");
     let celda = document.createElement("td");
-    celda.appendChild(document.createTextNode(persona.nombre))
+    celda.appendChild(document.createTextNode(materia.nombre))
     fila.appendChild(celda);
     celda = document.createElement("td");
-    celda.appendChild(document.createTextNode(persona.apellido))
+    celda.appendChild(document.createTextNode(materia.cuatrimestre))
     fila.appendChild(celda);
     celda = document.createElement("td");
-    celda.setAttribute("value", persona.localidad.id);
-    celda.appendChild(document.createTextNode(persona.localidad.nombre));
+    celda.appendChild(document.createTextNode(materia.fechaFinal.toString()));
     fila.appendChild(celda);
     celda = document.createElement("td");
-    celda.appendChild(document.createTextNode(persona.sexo));
+    celda.appendChild(document.createTextNode(materia.turno));
     fila.appendChild(celda);
     celda = document.createElement("td");
-    fila.addEventListener("click", cargaFormulario);
+    fila.addEventListener("dblclick", cargaFormulario);
 
     tabla.appendChild(fila);
 
 }
 
-//Carga las personas
-function CargarEntidades() {
 
-    var xhr = new XMLHttpRequest();
+
+//Carga las materias
+const GetMaterias = new Promise((resolve, reject) => {
+
+    let xhr = new XMLHttpRequest();
     xhr.onreadystatechange = function () {
 
-        if (this.status == 200 && this.readyState == 4) {
+        if (xhr.readyState == 4) {
 
-            $("idSpinner").style.visibility = "hidden";
-            let personas = JSON.parse(xhr.responseText);
-
-            personas.map(function (item) {
-                construirTabla(item);
-            })
-
+            if (xhr.status == 200) {
+                let datos = JSON.parse(xhr.responseText);
+                resolve(datos);
+            } else {
+                reject('Ocurrio un error');
+            }
         }
     }
 
-    xhr.open("GET", "http://localhost:3000/personas", true);
+    xhr.open("GET", "http://localhost:3000/materias", true);
     xhr.send();
-    $("idSpinner").style.visibility = "visible";
-}
+});
 
 
-function CargarLocalidades() {
+function CargarTabla() {
 
-    var xhr = new XMLHttpRequest();
-    xhr.onreadystatechange = function () {
+    materias.forEach((item) => {
+        construirTabla(item);
+    })
 
-        if (this.status == 200 && this.readyState == 4) {
-            $("idSpinner").style.visibility = "hidden";
-            localidades = JSON.parse(xhr.responseText);
-
-            localidades.map(function (item) {
-                AgregarLocalidades(item);
-            })
-
-        }
-    }
-
-    xhr.open("GET", "http://localhost:3000/localidades", true);
-    xhr.send();
-    $("idSpinner").style.visibility = "visible";
-
-}
-
-
-function AgregarLocalidades(localidad) {
-
-    let opciones = $("localidad");
-    let option = document.createElement("option");
-    option.setAttribute("id", "loc" + localidad.id);
-    option.appendChild(document.createTextNode(localidad.nombre))
-    opciones.appendChild(option);
 }
 
 
 function cargaFormulario(e) {
 
+    fila = e.target.parentNode; //referencia de fila seleccionada
     let formulario = $("formulario");
-
-    fila = e.target.parentNode;
-
-    if (fila.childNodes[0].childNodes[0].nodeValue != undefined) {
-
-        formulario.style.visibility = "visible";
-
-        let nombre = fila.childNodes[0].childNodes[0].nodeValue;
-        let apellido = fila.childNodes[1].childNodes[0].nodeValue;
-        let localidad = fila.childNodes[2].childNodes[0].nodeValue;
-        let sexo = fila.childNodes[3].childNodes[0].nodeValue;
-
-
-        $("txtNombre").value = nombre;
-        $("txtApellido").value = apellido
-        $("localidad").value = localidad;
-        $("txtNombre").setAttribute("user", e.currentTarget.id.substring(7));
-
-        if (sexo == "Male") {
-            $("sexMasc").checked = true;
-            $("sexFem").checked = false;
-        } else {
-            $("sexMasc").checked = false;
-            $("sexFem").checked = true;
-        }
-
-
-
-    }
+    let id = e.currentTarget.id;
+    formulario.style.visibility = "visible";
+    cargarMateriaPorId(id);
 
 }
 
-$("btnModificar").addEventListener("click", (e) => {
+function cargarMateriaPorId(id) {
 
-    let auxNombre = true;
-    let auxApellido = true;
-    let auxSexo = false;
-    let sexo;
+    materias.forEach((materia) => {
 
-    if ($("txtNombre").value.length < 4) {
+        if (materia.id.toString() == id) {
+            $("txtNombre").value = materia.nombre;
+            $("cuatrimestre").value = materia.cuatrimestre;
+            let auxFecha = materia.fechaFinal;
+            let fecha = auxFecha.substring(6, 10) + "-" + auxFecha.substring(3, 5) + "-" + auxFecha.substring(0, 2);
+            $("dateFecha").value = fecha;
+            $("txtNombre").setAttribute("user", materia.id);
+
+            $("txtNombre").style.borderColor = "white";
+            $("dateFecha").style.borderColor = "white";
+
+            if (materia.turno == "Mañana") {
+                $("turnoMañ").checked = true;
+                $("turnoNoc").checked = false;
+            } else {
+                $("turnoMañ").checked = false;
+                $("turnoNoc").checked = true;
+            }
+        };
+    })
+
+}
+
+function ValidarCampos() {
+
+    let retorno = true;
+    let fechaActual = Date.now();
+    let fecha = new Date($("dateFecha").value);
+
+    if ($("txtNombre").value.length <= 6) {
 
         $("txtNombre").style.borderColor = "red";
-        auxNombre = false;
+        retorno = false;
     } else {
         $("txtNombre").style.borderColor = "green";
     }
 
-    if ($("txtApellido").value.length < 4) {
+    if (fecha <= fechaActual) {
 
-        $("txtApellido").style.borderColor = "red";
-        auxNombre = false;
+        $("dateFecha").style.borderColor = "red";
+        retorno = false;
     } else {
-        $("txtApellido").style.borderColor = "green";
+        $("dateFecha").style.borderColor = "green";
     }
 
-    if ($("sexMasc").checked || $("sexFem").checked) {
-        if ($("sexMasc").checked) {
-            sexo = "Masculino";
-        } else {
-            sexo = "Femenino";
-        }
-        auxSexo = true;
+    if (!($("turnoMañ").checked == true || $("turnoNoc").checked == true)) {
+        retorno = false;
     }
 
-    if (auxNombre && auxApellido && auxSexo) {
+    return retorno;
 
-        let id = $("txtNombre").getAttribute("user");
-        let nombre = $("txtNombre").value;
-        let apellido = $("txtApellido").value;
-        let localidad = $("localidad").value;
-        let idLocalidad;
-
-        localidades.map(function (item) {
-            if (item.nombre == localidad) {
-                idLocalidad = item.id;
-            };
-        })
-
-
-        let jsonPersona = { "id": id, "nombre": nombre, "apellido": apellido, "localidad": { "id": idLocalidad, "nombre": localidad }, "sexo": sexo, "imagen": "" }
-
-        let xhr = new XMLHttpRequest();
-        xhr.onreadystatechange = function () {
-
-            if (xhr.status == 200 && xhr.readyState == 4) {
-                $("idSpinner").style.visibility = "hidden";
-
-                fila.childNodes[0].childNodes[0].nodeValue = nombre;
-                fila.childNodes[1].childNodes[0].nodeValue = apellido;
-                fila.childNodes[2].childNodes[0].nodeValue = localidad;
-                fila.childNodes[3].childNodes[0].nodeValue = sexo;
-
-            }
-        }
-
-        xhr.open("POST", "http://localhost:3000/editar");
-        xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-        xhr.send(JSON.stringify(jsonPersona));
-
-        $("idSpinner").style.visibility = "visible";
-    }
-
-});
-
-function FallaPeticion(){
-    console.log("falla de conexion");
 }
 
-$("btnCerrar").addEventListener("click", () => {
-    $("formulario").style.visibility = "hidden";
+
+function generarJson() {
+
+    let id = $("txtNombre").getAttribute("user");
+    let nombre = $("txtNombre").value;
+    let cuatrimestre = $("cuatrimestre").value;
+    let fecha = new Date($("dateFecha").value);
+    let turno;
+    let fechaFinal;
+
+
+    let dia = fecha.getDate();
+    let mes = fecha.getMonth();
+    mes++;
+    let año = fecha.getFullYear();
+    fechaFinal = dia + "/" + mes + "/" + año;
+
+    if (ValidarCampos()) {
+
+        if ($("turnoMañ").checked) {
+            turno = "Mañana";
+        } else {
+            turno = "Noche";
+
+        }
+
+        let jsonMateria = { "id": id, "nombre": nombre, "cuatrimestre": cuatrimestre, "fechaFinal": fechaFinal, "turno": turno };
+        return jsonMateria;
+
+    }
+
+}
+
+const EditarFila = (objeto) => new Promise((resolve, reject) => {
+
+    let xhr = new XMLHttpRequest();
+    xhr.onreadystatechange = function () {
+
+        if (xhr.readyState == 4) {
+            if (xhr.status == 200) {
+                resolve(JSON.parse(xhr.responseText));
+            } else {
+                reject("Ocurrio un error");
+            }
+        }
+    }
+
+    xhr.open("POST", "http://localhost:3000/editar");
+    xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+    xhr.send(JSON.stringify(objeto));
+
+});
+
+const EliminarFila = (objeto) => new Promise((resolve, reject) => {
+
+    let xhr = new XMLHttpRequest();
+    xhr.onreadystatechange = function () {
+
+        if (xhr.readyState == 4) {
+            if (xhr.status == 200) {
+                resolve(JSON.parse(xhr.responseText));
+            } else {
+                reject("Ocurrio un error");
+            }
+        }
+    }
+
+    xhr.open("POST", "http://localhost:3000/eliminar");
+    xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+    xhr.send(JSON.stringify(objeto));
+
+});
+
+function actualizarListado(object) {
+
+    for (let i = 0; i < materias.length; i++) {
+        if (object.id == materias[i].id) {
+            materias[i].nombre = object.nombre;
+            materias[i].fechaFinal = object.fechaFinal;
+            materias[i].turno = object.turno;
+        }
+    };
+
+}
+
+function limpiarTabla() {
+
+    let tabla = $('tabla');
+    let filasCount = tabla.rows.length;
+    for (var i = 1; i < filasCount; i++) {
+        tabla.deleteRow(1);
+    }
+
+}
+
+function RemoverDelListado(object) {
+
+    for (let i = 0; i < materias.length; i++) {
+        if (object.id == materias[i].id) {
+            materias.splice(i, 1);
+        }
+    }
+}
+
+function jsonEliminar() {
+
+    let id = $("txtNombre").getAttribute("user");
+
+    let jsonMateria = { "id": id };
+
+    return jsonMateria;
+
+}
+
+function eliminarElemento() {
+    let id = $("txtNombre").getAttribute("user");
+    let fila = $(id);
+    let tabla = $("tabla");
+    tabla.removeChild(fila);
+}
+
+
+function FallaPeticion(mensaje) {
+    console.log(mensaje);
+}
+
+
+function SpinnerVisibility(x) {
+
+    if (x == true) {
+        $("idSpinner").style.visibility = "visible";
+    } else {
+        $("idSpinner").style.visibility = "hidden";
+    }
+}
+
+window.addEventListener("load", () => {
+
+    SpinnerVisibility(false);
+
+    GetMaterias.then(elemento => {
+        materias = elemento;
+        CargarTabla(materias);
+    })
+        .catch(f => {
+            FallaPeticion(f);
+        });
+
+
+    $("btnModificar").addEventListener("click", (e) => {
+
+        if (ValidarCampos()) {
+            SpinnerVisibility(true);
+            EditarFila(generarJson())
+                .then((datos) => {
+                    actualizarListado(datos);
+                    limpiarTabla();
+                    CargarTabla();
+                    SpinnerVisibility(false);
+
+                })
+                .catch((error) => {
+
+                    console.error(error);
+                })
+                .finally(function () {
+                    SpinnerVisibility(false);
+                });
+
+
+        }
+    });
+
+    $("btnEliminar").addEventListener("click", (e) => {
+
+        SpinnerVisibility(true);
+        EliminarFila(jsonEliminar())
+            .then((datos) => {
+                RemoverDelListado(datos);
+                eliminarElemento();
+                SpinnerVisibility(false);
+            })
+            .catch((error) => {
+
+                console.error(error);
+            })
+            .finally(function () {
+                SpinnerVisibility(false);
+            });
+
+
+    });
+
+    $("btnCerrar").addEventListener("click", () => {
+        $("formulario").style.visibility = "hidden";
+    });
+
 });
 
 
 
-window.addEventListener("load", CargarEntidades);
-window.addEventListener("load", CargarLocalidades);
 

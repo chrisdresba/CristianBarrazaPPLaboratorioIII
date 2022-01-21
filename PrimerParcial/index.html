@@ -11,49 +11,51 @@
 
 <body>
 
+	<h3>Materias Cuatrimestrales</h3>
     <div id="container">
-        <div id="listado">
-            <h3>Lista de personas</h3>
-            <table id="tabla">
-                <tr id=cabecera>
-                    <th>Nombre</th>
-                    <th>Apellido</th>
-                    <th>Localidad</th>
-                    <th>Sexo</th>
-                </tr>
+    	<div id="idSpinner">
+    	</div>
+        <div id="listado">  
+            <table id="tabla" class="grilla">
+            	<thead>
+	                <tr id=cabecera>
+	                    <th>Materia</th>
+	                    <th>Cuatrimestre</th>
+	                    <th>Fecha Final</th>
+	                    <th>Turno</th>
+	                </tr>
+           		 </thead>
             </table>
         </div>
-
-        <div>
-            <div id="idSpinner"></div>
-        </div>
-
-
 
         <div id="formulario">
             <button id="btnCerrar">x</button>
             <br />
             <br />
-            <label for="">Nombre:</label>
+            <label for="">Materia:</label>
             <input class="inputs" type="text" id="txtNombre" />
-            <label for="">Apellido:</label>
-            <input class="inputs" type="text" id="txtApellido" />
+            <label for="">Fecha Final:</label>
+            <input class="inputs" type="date" id="dateFecha" value=""/>
             <br />
-            <label for="">Localidad:</label>
+            <label for="">Cuatrimestre:</label>
             <br />
-            <select name="localidad" id="localidad">
-                <option value="" id="locDefault" disabled selected>Localidad...</option>
+            <select name="cuatrimestre" id="cuatrimestre" disabled selected>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
             </select>
             <br />
-            <label for="">Sexo:</label>
             <br />
-            <input type="radio" name="doc" id="sexMasc" value="Male" /> <label for="">Masculino</label>
-            <input type="radio" name="doc" id="sexFem" value="Female" /> <label for="">Femenino</label>
+            <label for="">Turno:</label>
+            <br />
+            <input type="radio" name="doc" id="turnoMañ" value="Mañana" /> <label for="">Mañana</label>
+            <input type="radio" name="doc" id="turnoNoc" value="Noche" /> <label for="">Noche</label>
             <br />
             <button id="btnModificar" value="">Modificar</button>
+            <button id="btnEliminar" value="">Eliminar</button>
         </div>
     </div>
-
     <script src="js/main.js" defer></script>
 </body>
 
